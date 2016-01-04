@@ -59,4 +59,8 @@ CHIP ALU {
    Mux16(a=out2, b=out1, sel=f, out=out3);
    Not16(in=out3, out=out4);
    Mux16(a=out3, b=out4, sel=no, out=out);
+   Mux16(a=out3, b=out4, sel=no, out=outtest);
+
+   // Or(a=outtest[0], b=outtest[1], out=outt);
+   And16(a=outtest, b=true, out[15]=ng);
 }
