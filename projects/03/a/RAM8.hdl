@@ -5,8 +5,8 @@
 
 /**
  * Memory of 8 registers, each 16 bit-wide. Out holds the value
- * stored at the memory location specified by address. If load==1, then 
- * the in value is loaded into the memory location specified by address 
+ * stored at the memory location specified by address. If load==1, then
+ * the in value is loaded into the memory location specified by address
  * (the loaded value will be emitted to out from the next time step onward).
  */
 
@@ -16,4 +16,54 @@ CHIP RAM8 {
 
     PARTS:
     // Put your code here:
+    And(a=true, b=address[0], out=A);
+    And(a=true, b=address[1], out=B);
+    And(a=true, b=address[2], out=C);
+    Not(in=A, out=notA);
+    Not(in=B, out=notB);
+    Not(in=C, out=notC);
+
+    And(a=notA, b=notB, out=notAB);
+    And(a=notAB, b=notC, out=load000);
+
+    And(a=notB, b=notC, out=notBC);
+    And(a=notBC, b=A, out=load001);
+
+    And(a=notA, b=notC, out=notAC);
+    And(a=notAC, b=B, out= load010);
+
+    And(a=A, b=B, out=AB);
+    And(a=AB, b=notC, out=load011);
+
+    And(a=notAB, b=C, out=load100);
+
+    And(a=A, b=C, out=AC);
+    And(a=AC, b=notB, out=load101);
+
+    And(a=B, b=C, out=BC);
+    And(a=BC, b=notA, out=load110);
+
+    And(a=BC, b=A, out=load111);
+
+    And(a=load000, b=load, out=reg0);
+    And(a=load001, b=load, out=reg1);
+    And(a=load010, b=load, out=reg2);
+    And(a=load011, b=load, out=reg3);
+
+    And(a=load100, b=load, out=reg4);
+    And(a=load101, b=load, out=reg5);
+    And(a=load110, b=load, out=reg6);
+    And(a=load111, b=load, out=reg7);
+
+    Register(in=in, load=reg0, out=o1);
+    Register(in=in, load=reg1, out=o2);
+    Register(in=in, load=reg2, out=o3);
+    Register(in=in, load=reg3, out=o4);
+
+    Register(in=in, load=reg4, out=o5);
+    Register(in=in, load=reg5, out=o6);
+    Register(in=in, load=reg6, out=o7);
+    Register(in=in, load=reg7, out=o8);
+
+    Mux8Way16(a=o1, b=o2, c=o3, d=o4, e=o5, f=o6, g=o7, h=o8, sel=address, out=out);
 }
