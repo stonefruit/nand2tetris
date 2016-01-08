@@ -5,8 +5,8 @@
 
 /**
  * Memory of 4K registers, each 16 bit-wide. Out holds the value
- * stored at the memory location specified by address. If load==1, then 
- * the in value is loaded into the memory location specified by address 
+ * stored at the memory location specified by address. If load==1, then
+ * the in value is loaded into the memory location specified by address
  * (the loaded value will be emitted to out from the next time step onward).
  */
 
@@ -16,4 +16,54 @@ CHIP RAM4K {
 
     PARTS:
     // Put your code here:
+    And(a=true, b=address[9], out=A);
+    And(a=true, b=address[10], out=B);
+    And(a=true, b=address[11], out=C);
+    Not(in=A, out=notA);
+    Not(in=B, out=notB);
+    Not(in=C, out=notC);
+
+    And(a=notA, b=notB, out=notAB);
+    And(a=notAB, b=notC, out=load000);
+
+    And(a=notB, b=notC, out=notBC);
+    And(a=notBC, b=A, out=load001);
+
+    And(a=notA, b=notC, out=notAC);
+    And(a=notAC, b=B, out= load010);
+
+    And(a=A, b=B, out=AB);
+    And(a=AB, b=notC, out=load011);
+
+    And(a=notAB, b=C, out=load100);
+
+    And(a=A, b=C, out=AC);
+    And(a=AC, b=notB, out=load101);
+
+    And(a=B, b=C, out=BC);
+    And(a=BC, b=notA, out=load110);
+
+    And(a=BC, b=A, out=load111);
+
+    And(a=load000, b=load, out=reg0);
+    And(a=load001, b=load, out=reg1);
+    And(a=load010, b=load, out=reg2);
+    And(a=load011, b=load, out=reg3);
+
+    And(a=load100, b=load, out=reg4);
+    And(a=load101, b=load, out=reg5);
+    And(a=load110, b=load, out=reg6);
+    And(a=load111, b=load, out=reg7);
+
+    RAM512(in=in, load=reg0, address=address[0..8], out=o0);
+    RAM512(in=in, load=reg1, address=address[0..8], out=o1);
+    RAM512(in=in, load=reg2, address=address[0..8], out=o2);
+    RAM512(in=in, load=reg3, address=address[0..8], out=o3);
+
+    RAM512(in=in, load=reg4, address=address[0..8], out=o4);
+    RAM512(in=in, load=reg5, address=address[0..8], out=o5);
+    RAM512(in=in, load=reg6, address=address[0..8], out=o6);
+    RAM512(in=in, load=reg7, address=address[0..8], out=o7);
+
+    Mux8Way16(a=o0, b=o1, c=o2, d=o3, e=o4, f=o5, g=o6, h=o7, sel=address[9..11], out=out);
 }
