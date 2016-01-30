@@ -1,6 +1,6 @@
 Start the programs with this
 
-~/Desktop/nand2tetris/tools/COMMAND
+~/Desktop/nand2tetris/tools/Assembler.sh
 
 Tool	Command
 Hardware Simulator	HardwareSimulator.sh
